@@ -1,7 +1,6 @@
 data/*.csv
 models/*.pkl
 models/*.joblib
-submissions/*.csv
 venv/
 .env/
 .ipynb_checkpoints/
