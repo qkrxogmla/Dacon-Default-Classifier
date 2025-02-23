@@ -1,0 +1,6 @@
+# 모든 텍스트 파일을 자동 감지하여 처리
+* text=auto
+
+# 쉘 스크립트와 CSV 파일은 항상 LF 사용 (Mac과 일관성 유지)
+*.sh text eol=lf
+*.csv text eol=lf
