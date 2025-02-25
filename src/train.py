@@ -1,23 +1,29 @@
 import pandas as pd
+import numpy as np
+from sklearn.model_selection import KFold, cross_val_score
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-import joblib  # 모델 저장을 위해 joblib을 임포트
+import joblib
 
-# 미리 분할된 데이터 파일 불러오기
-X_train = pd.read_csv('data/0.8info.csv')
-y_train = pd.read_csv('data/0.8ans.csv')
-X_val = pd.read_csv('data/0.2info.csv')
-y_val = pd.read_csv('data/0.2ans.csv')
+# 1. 전처리된 train 데이터 불러오기 (UID와 타깃 포함)
+train_df = pd.read_csv('data/train_preprocessed.csv')
+# train_preprocessed.csv에는 전처리 과정이 완료된 데이터가 저장되어 있습니다.
+# (예: preprocessing.py에서 UID와 '채무 불이행 여부'를 포함하여 저장)
 
-# 만약 y_train, y_val 파일이 단일 컬럼이라면, np.ravel()이나 .squeeze()로 1차원 배열로 만들어주세요.
-y_train = y_train.squeeze()
-y_val = y_val.squeeze()
+# 2. 학습에 사용할 입력 데이터(X)와 타깃(y) 구성 (UID는 제거)
+X = train_df.drop(columns=['UID', '채무 불이행 여부'])
+y = train_df['채무 불이행 여부']
 
-# 모델 학습
+# 3. 5-Fold 교차 검증 수행
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
 model = RandomForestClassifier(random_state=42)
-model.fit(X_train, y_train)
-y_pred = model.predict(X_val)
-print("Validation Accuracy:", accuracy_score(y_val, y_pred))
 
-# 학습된 모델을 models 폴더에 저장 (폴더가 존재해야 합니다)
+# cross_val_score()를 통해 각 fold의 정확도 평가
+scores = cross_val_score(model, X, y, cv=kf, scoring='accuracy')
+print("5-Fold Cross Validation Scores:", scores)
+print("평균 정확도:", np.mean(scores))
+
+# 4. 최종 모델 학습 (전체 훈련 데이터를 사용)
+model.fit(X, y)
+
+# 5. 학습된 최종 모델을 models 폴더에 저장 (폴더가 미리 존재해야 함)
 joblib.dump(model, 'models/random_forest_model.pkl')
