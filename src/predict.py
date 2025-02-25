@@ -18,4 +18,6 @@ submission = pd.DataFrame({
     'UID': uids,
     '채무 불이행 확률': pred_probs
 })
-submission.to_csv('submissions/test_predictions2.csv', index=False)
+print("📌 CSV 저장을 시도합니다...")
+submission.to_csv('submissions/test_predictions_randomforest.csv', index=False)
+print("✅ CSV 저장 완료!")
