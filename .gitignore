@@ -1,0 +1,15 @@
+#data/*.csv
+#models/*.pkl
+models/*.joblib
+venv/
+.env/
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.cache
+logs/
+*.log
+.vscode/
+.idea/
